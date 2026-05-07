@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OROFAST — Digital Wallet</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Syne:wght@700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root{
+  --gold:#C8943E;--gold-l:#E8B96A;--gold-d:#9A6E28;
+  --green:#1C6B3A;--green-l:#2A8A4A;--green-p:#E8F5EE;
+  --red:#C0392B;--red-p:#FDECEA;
+  --bg:#F7F5F0;--surface:#FFF;--surface2:#F2EEE7;
+  --border:rgba(0,0,0,0.08);--text:#1A1A18;--text2:#6B6860;--text3:#9B9890;
+  --sh:0 4px 16px rgba(0,0,0,.08);--sh-lg:0 12px 40px rgba(0,0,0,.12);
+  --r:20px;--rs:12px;--rx:8px;--tr:.2s ease;
+  --font:'DM Sans',sans-serif;
+}
+[lang="ar"]{--font:'Cairo',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;}
+.page{display:none;}.page.active{display:block;}
+
+.topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:10px;cursor:pointer;}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.9rem;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:30px;padding:6px 14px;font-size:.82rem;font-weight:500;color:var(--text2);}
+.id-badge{font-weight:700;color:var(--green);font-size:.78rem;}
+.lang-toggle{display:flex;background:var(--surface2);border-radius:30px;padding:3px;}
+.lang-btn{padding:5px 12px;border-radius:25px;border:none;cursor:pointer;font-size:.78rem;font-weight:600;background:transparent;color:var(--text2);transition:var(--tr);}
+.lang-btn.active{background:var(--green);color:#fff;}
+
+.btn{padding:10px 22px;border-radius:30px;border:none;cursor:pointer;font-family:var(--font);font-weight:600;font-size:.88rem;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:var(--tr);white-space:nowrap;}
+.btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:var(--green-l);transform:translateY(-1px);}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;}.btn-gold:hover{transform:translateY(-1px);}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text2);}.btn-ghost:hover{background:var(--surface2);}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-sm{padding:7px 14px;font-size:.8rem;}
+
+.auth-bg{min-height:100vh;background:linear-gradient(135deg,#1C1A14 0%,#2A2418 40%,#1A2E1E 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.auth-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,rgba(200,148,62,.15) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(28,107,58,.2) 0%,transparent 50%);}
+.auth-card{background:rgba(255,255,255,.97);border-radius:28px;padding:44px 40px;width:420px;max-width:90vw;box-shadow:var(--sh-lg);position:relative;z-index:1;}
+.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px;justify-content:center;}
+.auth-logo-mark{width:52px;height:52px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;}
+.auth-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;}
+.auth-sub{font-size:1.2rem;font-weight:700;text-align:center;margin-bottom:6px;}
+.auth-desc{text-align:center;color:var(--text2);font-size:.85rem;margin-bottom:28px;}
+.auth-switch{text-align:center;margin-top:20px;font-size:.88rem;color:var(--text2);}
+.auth-switch a{color:var(--green);font-weight:700;cursor:pointer;}
+.auth-hint{text-align:center;margin-top:14px;font-size:.75rem;color:var(--text3);background:var(--surface2);border-radius:var(--rx);padding:8px 12px;}
+
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:5px;}
+.form-control{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--rs);background:var(--bg);font-family:var(--font);font-size:.9rem;color:var(--text);transition:var(--tr);outline:none;}
+.form-control:focus{border-color:var(--green);background:#fff;box-shadow:0 0 0 3px rgba(28,107,58,.1);}
+textarea.form-control{resize:vertical;min-height:90px;}
+
+.alert{padding:10px 14px;border-radius:var(--rx);font-size:.85rem;margin-bottom:12px;}
+.alert-error{background:var(--red-p);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.alert-success{background:var(--green-p);color:var(--green);border:1px solid rgba(28,107,58,.2);}
+
+.toast-wrap{position:fixed;top:20px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{padding:12px 20px;border-radius:30px;color:#fff;font-weight:600;font-size:.85rem;background:var(--green);box-shadow:0 6px 20px rgba(0,0,0,.15);animation:sIn .3s ease,sOut .4s ease 2.8s forwards;}
+.toast-error{background:var(--red);}.toast-info{background:#1565C0;}
+@keyframes sIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes sOut{from{opacity:1}to{opacity:0}}
+
+.app-layout{display:flex;min-height:calc(100vh - 60px);}
+.sidenav{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:20px 10px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+.nav-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);padding:14px 14px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--rs);cursor:pointer;font-weight:500;font-size:.88rem;color:var(--text2);margin-bottom:3px;transition:var(--tr);border:none;background:transparent;width:100%;text-align:left;}
+[dir="rtl"] .nav-item{text-align:right;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:var(--green-p);color:var(--green);font-weight:700;}
+.nav-icon{font-size:1rem;width:22px;text-align:center;flex-shrink:0;}
+.main-content{flex:1;padding:28px;overflow:hidden;}
+.section{display:none;}.section.active{display:block;}
+
+.card{background:var(--surface);border-radius:var(--r);box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid var(--border);margin-bottom:18px;}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:8px;}
+.card-body{padding:20px;}
+
+.bal-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.bal-card{border-radius:var(--r);padding:22px;position:relative;overflow:hidden;}
+.bal-usd{background:linear-gradient(135deg,#1C6B3A,#2A8A4A);color:#fff;}
+.bal-egp{background:linear-gradient(135deg,#9A6E28,#C8943E);color:#fff;}
+.bal-card::after{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.08);}
+.bal-lbl{font-size:.8rem;opacity:.8;margin-bottom:4px;font-weight:500;}
+.bal-amt{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;line-height:1;}
+.bal-sub{font-size:.75rem;opacity:.7;margin-top:4px;}
+
+.rate-bar{background:linear-gradient(135deg,var(--green-p),rgba(200,148,62,.08));border:1px solid rgba(28,107,58,.15);border-radius:var(--rs);padding:11px 16px;font-size:.85rem;font-weight:600;color:var(--green);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{padding:10px 14px;text-align:left;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);border-bottom:1px solid var(--border);}
+[dir="rtl"] th,[dir="rtl"] td{text-align:right;}
+td{padding:11px 14px;border-bottom:1px solid rgba(0,0,0,.04);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--surface2);}
+.empty{text-align:center;padding:28px;color:var(--text3);font-size:.88rem;}
+
+.badge{padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;}
+.b-green{background:var(--green-p);color:var(--green);}
+.b-gold{background:rgba(200,148,62,.12);color:var(--gold-d);}
+.b-red{background:var(--red-p);color:var(--red);}
+.b-blue{background:#E3F2FD;color:#1565C0;}
+.amt-out{color:var(--red);font-weight:700;}
+.amt-in{color:var(--green);font-weight:700;}
+
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-ov.open{display:flex;}
+.modal{background:#fff;border-radius:var(--r);padding:28px;max-width:520px;width:90%;box-shadow:var(--sh-lg);max-height:85vh;display:flex;flex-direction:column;}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.modal-title{font-weight:700;font-size:1rem;}
+.modal-x{border:none;background:none;cursor:pointer;font-size:1.3rem;color:var(--text2);padding:4px;border-radius:6px;}
+.modal-x:hover{background:var(--surface2);}
+
+.chat-area{flex:1;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);padding:14px;background:var(--bg);min-height:150px;max-height:260px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;}
+.bubble{padding:10px 14px;border-radius:16px;max-width:80%;font-size:.83rem;line-height:1.5;}
+.bubble.admin{background:var(--green-p);color:var(--green);border-bottom-left-radius:4px;}
+.bubble.user{background:#E3F2FD;color:#1565C0;align-self:flex-end;border-bottom-right-radius:4px;}
+[dir="rtl"] .bubble.user{align-self:flex-start;}
+.bubble strong{display:block;font-size:.72rem;opacity:.7;margin-bottom:2px;}
+.bubble small{display:block;font-size:.68rem;opacity:.55;margin-top:4px;}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.stat-box{background:var(--surface2);border-radius:var(--rs);padding:16px;text-align:center;}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;}
+.stat-lbl{font-size:.72rem;color:var(--text3);margin-top:2px;}
+
+.tk-card{background:var(--surface2);border-radius:var(--rs);padding:14px 16px;margin-bottom:8px;cursor:pointer;border:1px solid transparent;transition:var(--tr);}
+.tk-card:hover{border-color:var(--green);background:#fff;}
+
+.preview{background:var(--surface2);border-radius:var(--rs);padding:12px 16px;font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:12px;}
+
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.75);z-index:9000;display:none;align-items:center;justify-content:center;}
+.loading.show{display:flex;}
+.loading-card{background:#fff;border-radius:var(--r);padding:24px 36px;box-shadow:var(--sh-lg);text-align:center;}
+.sp{width:36px;height:36px;border:3px solid var(--green-p);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:700px){
+  .sidenav{display:none;}
+  .main-content{padding:16px;}
+  .bal-row{grid-template-columns:1fr;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .auth-card{padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="toast-wrap" id="toasts"></div>
+<div class="loading" id="loading">
+  <div class="loading-card"><div class="sp"></div><div id="loadTxt" style="font-weight:600;color:var(--text2);font-size:.9rem;">Loading…</div></div>
+</div>
+
+<!-- LOGIN -->
+<div class="page active" id="page-login">
+<div class="auth-bg"><div class="auth-card">
+  <div class="auth-logo"><div class="auth-logo-mark">O</div><div class="auth-title">OROFAST</div></div>
+  <div class="auth-sub" data-t="sign_in">Sign In</div>
+  <div class="auth-desc" data-t="welcome_back">Welcome back to your digital wallet</div>
+  <div id="loginAlert"></div>
+  <div class="form-group"><label class="form-label" data-t="username">Username</label><input class="form-control" id="loginUser" type="text" autocomplete="username"></div>
+  <div class="form-group"><label class="form-label" data-t="password">Password</label><input class="form-control" id="loginPass" type="password" autocomplete="current-password"></div>
+  <button class="btn btn-green" style="width:100%;padding:13px;" onclick="handleLogin()"><span data-t="sign_in_btn">Sign In</span></button>
+  <div class="auth-switch"><span data-t="no_account">Don't have an account?</span> <a onclick="goPage('register')" data-t="create_one">Create one</a></div>
+  <div class="auth-hint">🧪 <span data-t="demo_hint">Demo: admin / admin</span></div>
+  <div style="margin-top:14px;display:flex;justify-content:center;">
+    <div class="lang-toggle"><button class="lang-btn active" onclick="setLang('en')">EN</button><button class="lang-btn" onclick="setLang('ar')">عربي</button></div>
+  </div>
+</div></div>
+</div>
+
+<!-- REGISTER -->
+<div class="page" id="page-register">
+<div class="auth-bg"><div class="auth-card">
+  <div class="auth-logo"><div class="auth-logo-mark">O</div><div class="auth-title">OROFAST</div></div>
+  <div class="auth-sub" data-t="create_account">Create Account</div>
+  <div class="auth-desc" data-t="join_us">Fast & secure digital payments</div>
+  <div id="registerAlert"></div>
+  <div class="form-group"><label class="form-label" data-t="username">Username</label><input class="form-control" id="regUser" type="text"></div>
+  <div class="form-group"><label class="form-label" data-t="password">Password</label><input class="form-control" id="regPass" type="password"></div>
+  <div class="form-group"><label class="form-label" data-t="confirm_password">Confirm Password</label><input class="form-control" id="regPassConfirm" type="password"></div>
+  <button class="btn btn-gold" style="width:100%;padding:13px;" onclick="handleRegister()"><span data-t="create_account_btn">Create Account</span></button>
+  <div class="auth-switch"><span data-t="have_account">Already have an account?</span> <a onclick="goPage('login')" data-t="sign_in">Sign In</a></div>
+</div></div>
+</div>
+
+<!-- APP -->
+<div class="page" id="page-app">
+  <div class="topbar">
+    <div class="logo" onclick="nav('dashboard')"><div class="logo-mark">O</div>OROFAST</div>
+    <div class="topbar-right">
+      <div class="user-pill"><span id="tbUser"></span>&nbsp;<span class="id-badge" id="tbId"></span></div>
+      <div class="lang-toggle"><button class="lang-btn active" onclick="setLang('en')">EN</button><button class="lang-btn" onclick="setLang('ar')">عربي</button></div>
+      <button class="btn btn-ghost btn-sm" onclick="handleLogout()" data-t="logout">Logout</button>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <nav class="sidenav">
+      <div class="nav-lbl" data-t="nav_main">Main</div>
+      <button class="nav-item active" data-sec="dashboard" onclick="nav('dashboard')"><span class="nav-icon">📊</span><span data-t="nav_dashboard">Dashboard</span></button>
+      <button class="nav-item" data-sec="transfer" onclick="nav('transfer')"><span class="nav-icon">💸</span><span data-t="nav_transfer">Transfer</span></button>
+      <button class="nav-item" data-sec="exchange" onclick="nav('exchange')"><span class="nav-icon">🔄</span><span data-t="nav_exchange">Exchange</span></button>
+      <button class="nav-item" data-sec="history" onclick="nav('history')"><span class="nav-icon">📜</span><span data-t="nav_history">History</span></button>
+      <div class="nav-lbl" data-t="nav_account">Account</div>
+      <button class="nav-item" data-sec="deposit" onclick="nav('deposit')"><span class="nav-icon">📥</span><span data-t="nav_deposit">Deposit</span></button>
+      <button class="nav-item" data-sec="tickets" onclick="nav('tickets')"><span class="nav-icon">🎫</span><span data-t="nav_support">Support</span></button>
+      <button class="nav-item admin-only" data-sec="admin" onclick="nav('admin')" style="display:none"><span class="nav-icon">⚙️</span><span data-t="nav_admin">Admin</span></button>
+    </nav>
+
+    <main class="main-content">
+
+      <!-- DASHBOARD -->
+      <div class="section active" id="sec-dashboard">
+        <div class="rate-bar">📈 <span data-t="exchange_rate">Exchange Rate:</span> 1 USD = <strong id="rateDisp">—</strong> EGP</div>
+        <div class="bal-row">
+          <div class="bal-card bal-usd"><div class="bal-lbl" data-t="usd_balance">US Dollar</div><div class="bal-amt" id="balUSD">$0.00</div><div class="bal-sub">USD</div></div>
+          <div class="bal-card bal-egp"><div class="bal-lbl" data-t="egp_balance">Egyptian Pound</div><div class="bal-amt" id="balEGP">0.00 EGP</div><div class="bal-sub">EGP</div></div>
+        </div>
+        <div class="card"><div class="card-header">⚡ <span data-t="recent_transactions">Recent Transactions</span></div><div class="card-body" id="recentTxns"><div class="empty" data-t="no_transactions">No transactions yet</div></div></div>
+      </div>
+
+      <!-- TRANSFER -->
+      <div class="section" id="sec-transfer">
+        <div class="card"><div class="card-header">💸 <span data-t="nav_transfer">Transfer</span></div><div class="card-body">
+          <div id="transferAlert"></div>
+          <div class="form-group"><label class="form-label" data-t="recipient_id">Recipient Account ID</label><input class="form-control" id="trRecip" placeholder="OF-00000001"></div>
+          <div class="form-group"><label class="form-label" data-t="currency">Currency</label><select class="form-control" id="trCur"><option value="USD">USD — Dollar</option><option value="EGP">EGP — Egyptian Pound</option></select></div>
+          <div class="form-group"><label class="form-label" data-t="amount">Amount</label><input class="form-control" type="number" id="trAmt" step="0.01" min="0.01"></div>
+          <div class="form-group"><label class="form-label" data-t="password">Password</label><input class="form-control" type="password" id="trPass"></div>
+          <button class="btn btn-gold" onclick="handleTransfer()">🚀 <span data-t="send">Send</span></button>
+        </div></div>
+      </div>
+
+      <!-- EXCHANGE -->
+      <div class="section" id="sec-exchange">
+        <div class="card"><div class="card-header">🔄 <span data-t="nav_exchange">Exchange</span></div><div class="card-body">
+          <div class="rate-bar">📈 1 USD = <strong id="rateDispEx">—</strong> EGP</div>
+          <div id="exchangeAlert"></div>
+          <div class="form-group"><label class="form-label" data-t="direction">Direction</label><select class="form-control" id="exDir" onchange="updatePreview()"><option value="usd-to-egp">USD → EGP</option><option value="egp-to-usd">EGP → USD</option></select></div>
+          <div class="form-group"><label class="form-label" data-t="amount">Amount</label><input class="form-control" type="number" id="exAmt" step="0.01" min="0.01" oninput="updatePreview()"></div>
+          <div class="preview" id="exPreview">—</div>
+          <button class="btn btn-green" onclick="handleExchange()">🔄 <span data-t="execute_exchange">Execute Exchange</span></button>
+        </div></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="section" id="sec-history">
+        <div class="card"><div class="card-header">📜 <span data-t="nav_history">History</span></div>
+          <div class="table-wrap"><table><thead><tr><th data-t="date">Date</th><th data-t="type">Type</th><th data-t="from">From</th><th data-t="to">To</th><th data-t="amount">Amount</th><th data-t="status">Status</th></tr></thead><tbody id="histBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- DEPOSIT -->
+      <div class="section" id="sec-deposit">
+        <div class="card"><div class="card-header">📥 <span data-t="deposit_request">Deposit Request</span></div><div class="card-body">
+          <div id="depositAlert"></div>
+          <div class="form-group"><label class="form-label" data-t="currency">Currency</label><select class="form-control" id="depCur"><option value="USD">USD</option><option value="EGP">EGP</option></select></div>
+          <div class="form-group"><label class="form-label" data-t="amount">Amount</label><input class="form-control" type="number" id="depAmt" step="0.01" min="1"></div>
+          <div class="form-group"><label class="form-label" data-t="payment_method">Payment Method</label><input class="form-control" id="depMethod" placeholder="e.g. Bank Transfer, Instapay…"></div>
+          <button class="btn btn-gold" onclick="handleDeposit()">📤 <span data-t="submit_request">Submit</span></button>
+        </div></div>
+        <div class="card"><div class="card-header">📋 <span data-t="my_requests">My Requests</span></div>
+          <div class="table-wrap"><table><thead><tr><th data-t="date">Date</th><th data-t="amount">Amount</th><th data-t="currency">Currency</th><th data-t="payment_method">Method</th><th data-t="status">Status</th></tr></thead><tbody id="depBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- TICKETS -->
+      <div class="section" id="sec-tickets">
+        <div class="card"><div class="card-header">🎫 <span data-t="new_ticket">New Ticket</span></div><div class="card-body">
+          <div id="ticketAlert"></div>
+          <div class="form-group"><label class="form-label" data-t="subject">Subject</label><input class="form-control" id="tkSubject"></div>
+          <div class="form-group"><label class="form-label" data-t="message">Message</label><textarea class="form-control" id="tkMsg"></textarea></div>
+          <button class="btn btn-green" onclick="handleCreateTicket()">📤 <span data-t="open_ticket">Open Ticket</span></button>
+        </div></div>
+        <div class="card"><div class="card-header">📬 <span data-t="my_tickets">My Tickets</span></div><div class="card-body" id="tkList"><div class="empty" data-t="no_tickets">No tickets yet</div></div></div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="section" id="sec-admin">
+        <div class="card"><div class="card-header">⚙️ <span data-t="nav_admin">Admin Panel</span></div><div class="card-body">
+          <div class="stat-row">
+            <div class="stat-box"><div class="stat-val" id="adUsers">0</div><div class="stat-lbl" data-t="users">Users</div></div>
+            <div class="stat-box"><div class="stat-val" id="adUSD">—</div><div class="stat-lbl">Total USD</div></div>
+            <div class="stat-box"><div class="stat-val" id="adEGP">—</div><div class="stat-lbl">Total EGP</div></div>
+          </div>
+        </div></div>
+        <div class="card"><div class="card-header">📊 <span data-t="exchange_rate_setting">Exchange Rate</span></div><div class="card-body" style="display:flex;gap:10px;align-items:center;">
+          <input class="form-control" type="number" id="adRate" step="0.01" min="1" style="max-width:160px;">
+          <button class="btn btn-green" onclick="handleUpdateRate()">💾 <span data-t="save">Save</span></button>
+        </div></div>
+        <div class="card"><div class="card-header">⏳ <span data-t="pending_deposits">Pending Deposits</span></div>
+          <div class="table-wrap"><table><thead><tr><th data-t="date">Date</th><th data-t="user">User</th><th data-t="amount">Amount</th><th>Cur.</th><th data-t="action">Action</th></tr></thead><tbody id="adDepBody"></tbody></table></div>
+        </div>
+        <div class="card"><div class="card-header">👥 <span data-t="users">All Users</span></div>
+          <div class="table-wrap"><table><thead><tr><th>ID</th><th data-t="username">Username</th><th>USD</th><th>EGP</th></tr></thead><tbody id="adUsersBody"></tbody></table></div>
+        </div>
+        <div class="card"><div class="card-header">🎫 <span data-t="open_tickets">Open Tickets</span></div><div class="card-body" id="adTkList"><div class="empty" data-t="no_tickets">No open tickets</div></div></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- TICKET MODAL -->
+<div class="modal-ov" id="tkModal">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">🎫 <span id="tkModalSubject"></span></div><button class="modal-x" onclick="closeTkModal()">✕</button></div>
+    <div class="chat-area" id="tkChat"></div>
+    <textarea class="form-control" id="tkReply" style="margin-bottom:10px;" placeholder="Write your reply…"></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-green btn-sm" onclick="handleTkReply()">📤 <span data-t="send_reply">Send Reply</span></button>
+      <button class="btn btn-danger btn-sm" id="tkCloseBtn" onclick="handleCloseTk()" style="display:none">🔒 <span data-t="close_ticket">Close Ticket</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  SUPABASE  — persistSession:false prevents postMessage issues
+// ══════════════════════════════════════════════════════════════
+const { createClient } = window.supabase;
+const sb = createClient(
+  'https://znphzsjmyrcvcejulygm.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpucGh6c2pteXJjdmNlanVseWdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMTEwNDgsImV4cCI6MjA5MzY4NzA0OH0.vWgS9AHQosrud7vS3TqHyFBeNHLxLIkS_87tL1IrPs0',
+  { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
+);
+
+let CU=null,LANG='en',RATE=55,TK_ID=null;
+
+// ── TRANSLATIONS ──────────────────────────────────────────────
+const T={
+  en:{sign_in:'Sign In',welcome_back:'Welcome back to your digital wallet',username:'Username',password:'Password',sign_in_btn:'Sign In',no_account:"Don't have an account?",create_one:'Create one',demo_hint:'Demo: admin / admin',create_account:'Create Account',join_us:'Fast & secure digital payments',confirm_password:'Confirm Password',create_account_btn:'Create Account',have_account:'Already have an account?',nav_main:'Main',nav_dashboard:'Dashboard',nav_transfer:'Transfer',nav_exchange:'Exchange',nav_history:'History',nav_account:'Account',nav_deposit:'Deposit',nav_support:'Support',nav_admin:'Admin',logout:'Logout',exchange_rate:'Exchange Rate:',usd_balance:'US Dollar',egp_balance:'Egyptian Pound',recent_transactions:'Recent Transactions',no_transactions:'No transactions yet',recipient_id:'Recipient Account ID',currency:'Currency',amount:'Amount',send:'Send',direction:'Direction',execute_exchange:'Execute Exchange',date:'Date',type:'Type',from:'From',to:'To',status:'Status',deposit_request:'Deposit Request',payment_method:'Payment Method',submit_request:'Submit',my_requests:'My Requests',new_ticket:'New Ticket',subject:'Subject',message:'Message',open_ticket:'Open Ticket',my_tickets:'My Tickets',no_tickets:'No tickets yet',exchange_rate_setting:'Exchange Rate',save:'Save',pending_deposits:'Pending Deposits',users:'Users',user:'User',action:'Action',open_tickets:'Open Tickets',approve:'Approve',reject:'Reject',send_reply:'Send Reply',close_ticket:'Close Ticket',outgoing:'Outgoing',incoming:'Incoming',exchange_type:'Exchange',approved:'Approved',pending:'Pending',rejected:'Rejected',open:'Open',closed:'Closed',completed:'Completed',err_fields:'Please fill all required fields.',err_pass:'Incorrect password.',err_self:'Cannot transfer to yourself.',err_notfound:'Account not found.',err_funds:'Insufficient balance.',err_amount:'Invalid amount.',err_match:'Passwords do not match.',err_taken:'Username already taken.',err_conn:'Connection error — check your internet.',ok_transfer:'✅ Transfer successful!',ok_exchange:'✅ Exchange completed!',ok_deposit:'✅ Deposit request submitted.',ok_ticket:'✅ Ticket opened.',ok_reply:'✅ Reply sent.',ok_rate:'✅ Rate updated.',ok_approved:'✅ Deposit approved.',ok_rejected:'Deposit rejected.',ok_closed:'Ticket closed.',ok_register:'🎉 Account created!'},
+  ar:{sign_in:'تسجيل الدخول',welcome_back:'مرحباً بك في محفظتك الرقمية',username:'اسم المستخدم',password:'كلمة المرور',sign_in_btn:'دخول',no_account:'ليس لديك حساب؟',create_one:'إنشاء حساب',demo_hint:'حساب تجريبي: admin / admin',create_account:'إنشاء حساب',join_us:'مدفوعات رقمية سريعة وآمنة',confirm_password:'تأكيد كلمة المرور',create_account_btn:'إنشاء الحساب',have_account:'لديك حساب بالفعل؟',nav_main:'الرئيسية',nav_dashboard:'لوحة التحكم',nav_transfer:'تحويل',nav_exchange:'صرف العملات',nav_history:'السجل',nav_account:'الحساب',nav_deposit:'إيداع',nav_support:'الدعم',nav_admin:'إدارة',logout:'خروج',exchange_rate:'سعر الصرف:',usd_balance:'الدولار الأمريكي',egp_balance:'الجنيه المصري',recent_transactions:'آخر المعاملات',no_transactions:'لا توجد معاملات بعد',recipient_id:'رقم حساب المستلم',currency:'العملة',amount:'المبلغ',send:'إرسال',direction:'اتجاه الصرف',execute_exchange:'تنفيذ الصرف',date:'التاريخ',type:'النوع',from:'من',to:'إلى',status:'الحالة',deposit_request:'طلب إيداع',payment_method:'طريقة الدفع',submit_request:'تقديم',my_requests:'طلباتي',new_ticket:'فتح تذكرة',subject:'الموضوع',message:'الرسالة',open_ticket:'فتح التذكرة',my_tickets:'تذاكري',no_tickets:'لا توجد تذاكر',exchange_rate_setting:'سعر الصرف',save:'حفظ',pending_deposits:'طلبات الإيداع المعلقة',users:'المستخدمون',user:'المستخدم',action:'إجراء',open_tickets:'التذاكر المفتوحة',approve:'موافقة',reject:'رفض',send_reply:'إرسال الرد',close_ticket:'إغلاق التذكرة',outgoing:'صادر',incoming:'وارد',exchange_type:'صرف',approved:'مقبول',pending:'معلق',rejected:'مرفوض',open:'مفتوحة',closed:'مغلقة',completed:'مكتمل',err_fields:'يرجى ملء جميع الحقول.',err_pass:'كلمة المرور غير صحيحة.',err_self:'لا يمكن التحويل لنفسك.',err_notfound:'الحساب غير موجود.',err_funds:'الرصيد غير كافٍ.',err_amount:'مبلغ غير صحيح.',err_match:'كلمتا المرور غير متطابقتين.',err_taken:'اسم المستخدم مستخدم بالفعل.',err_conn:'خطأ في الاتصال — تحقق من الإنترنت.',ok_transfer:'✅ تم التحويل بنجاح!',ok_exchange:'✅ تم الصرف بنجاح!',ok_deposit:'✅ تم تقديم طلب الإيداع.',ok_ticket:'✅ تم فتح التذكرة.',ok_reply:'✅ تم إرسال الرد.',ok_rate:'✅ تم تحديث السعر.',ok_approved:'✅ تم قبول الإيداع.',ok_rejected:'تم رفض الطلب.',ok_closed:'تم إغلاق التذكرة.',ok_register:'🎉 تم إنشاء الحساب!'}
+};
+const t=k=>T[LANG][k]||T.en[k]||k;
+
+function setLang(l){
+  LANG=l;
+  document.documentElement.lang=l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',(b.textContent.includes('EN')&&l==='en')||(b.textContent.includes('ع')&&l==='ar')));
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const now=()=>new Date().toISOString();
+function toast(msg,type='success'){
+  const c=document.getElementById('toasts'),el=document.createElement('div');
+  el.className='toast'+(type!=='success'?' toast-'+type:'');
+  el.textContent=msg;c.appendChild(el);setTimeout(()=>el.remove(),3600);
+}
+function fmtM(n,cur){const v=Number(n)||0;return cur==='USD'?'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' EGP';}
+function fmtD(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function setAlert(id,msg,type='error'){document.getElementById(id).innerHTML=`<div class="alert alert-${type}">${msg}</div>`;}
+function clrAlert(id){document.getElementById(id).innerHTML='';}
+function showLoad(txt='Loading…'){document.getElementById('loadTxt').textContent=txt;document.getElementById('loading').classList.add('show');}
+function hideLoad(){document.getElementById('loading').classList.remove('show');}
+function goPage(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');}
+
+// ── AUTH ──────────────────────────────────────────────────────
+async function handleLogin(){
+  const username=document.getElementById('loginUser').value.trim();
+  const password=document.getElementById('loginPass').value.trim();
+  clrAlert('loginAlert');
+  if(!username||!password){setAlert('loginAlert',t('err_fields'));return;}
+  showLoad();
+  try{
+    const{data,error}=await sb.from('users').select('*').eq('username',username).eq('password',password).maybeSingle();
+    if(error)throw new Error(error.message);
+    if(!data){setAlert('loginAlert','❌ '+t('err_pass'));hideLoad();return;}
+    CU=data;toast('👋 Welcome, '+data.username);enterApp();
+  }catch(e){setAlert('loginAlert','❌ '+t('err_conn')+' — '+e.message);}
+  hideLoad();
+}
+
+async function handleRegister(){
+  const username=document.getElementById('regUser').value.trim();
+  const pass=document.getElementById('regPass').value.trim();
+  const conf=document.getElementById('regPassConfirm').value.trim();
+  clrAlert('registerAlert');
+  if(!username||!pass||!conf){setAlert('registerAlert',t('err_fields'));return;}
+  if(pass!==conf){setAlert('registerAlert',t('err_match'));return;}
+  showLoad();
+  try{
+    const{count}=await sb.from('users').select('*',{count:'exact',head:true});
+    const account_id='OF-'+String((count||0)+1).padStart(8,'0');
+    const{data:ex}=await sb.from('users').select('id').eq('username',username).maybeSingle();
+    if(ex){setAlert('registerAlert',t('err_taken'));hideLoad();return;}
+    const{data,error}=await sb.from('users').insert({id:uid(),username,password:pass,account_id,balance_usd:0,balance_egp:0,is_admin:false,created_at:now()}).select().maybeSingle();
+    if(error)throw new Error(error.message);
+    CU=data;toast(t('ok_register')+' — ID: '+account_id);enterApp();
+  }catch(e){setAlert('registerAlert','❌ '+t('err_conn')+' — '+e.message);}
+  hideLoad();
+}
+
+function handleLogout(){CU=null;goPage('login');document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';}
+
+// ── APP ENTRY ─────────────────────────────────────────────────
+async function enterApp(){
+  goPage('app');
+  document.getElementById('tbUser').textContent=CU.username;
+  document.getElementById('tbId').textContent=CU.account_id;
+  document.querySelectorAll('.admin-only').forEach(e=>e.style.display=CU.is_admin?'flex':'none');
+  await fetchRate();nav('dashboard');
+}
+async function fetchRate(){
+  const{data}=await sb.from('settings').select('exchange_rate').eq('id',1).maybeSingle();
+  RATE=data?.exchange_rate||55;
+  document.getElementById('rateDisp').textContent=RATE;
+  document.getElementById('rateDispEx').textContent=RATE;
+}
+
+// ── NAV ───────────────────────────────────────────────────────
+function nav(sec){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const btn=document.querySelector(`[data-sec="${sec}"]`);if(btn)btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('sec-'+sec);if(el)el.classList.add('active');
+  ({dashboard:loadDash,history:loadHistory,deposit:loadDeposits,tickets:loadTickets,admin:loadAdmin,exchange:updatePreview})[sec]?.();
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────
+async function loadDash(){
+  if(!CU)return;
+  const{data:u}=await sb.from('users').select('*').eq('id',CU.id).maybeSingle();
+  if(u){CU=u;document.getElementById('balUSD').textContent=fmtM(u.balance_usd,'USD');document.getElementById('balEGP').textContent=fmtM(u.balance_egp,'EGP');}
+  await fetchRate();
+  const{data:txs}=await sb.from('transactions').select('*').or(`from_account_id.eq.${CU.account_id},to_account_id.eq.${CU.account_id}`).order('timestamp',{ascending:false}).limit(6);
+  const c=document.getElementById('recentTxns');
+  if(!txs?.length){c.innerHTML=`<div class="empty">${t('no_transactions')}</div>`;return;}
+  c.innerHTML='<div class="table-wrap"><table><thead><tr><th>'+t('date')+'</th><th>'+t('type')+'</th><th>'+t('from')+'</th><th>'+t('to')+'</th><th>'+t('amount')+'</th></tr></thead><tbody>'+
+    txs.map(tx=>{const out=tx.from_account_id===CU.account_id&&tx.type==='transfer';const exc=tx.type==='exchange';return`<tr><td>${fmtD(tx.timestamp)}</td><td>${exc?t('exchange_type'):out?t('outgoing'):t('incoming')}</td><td>${tx.from_account_id}</td><td>${tx.to_account_id}</td><td class="${out?'amt-out':exc?'':'amt-in'}">${out?'−':exc?'⇄':'+'}${fmtM(tx.amount,exc?'USD':tx.currency)}</td></tr>`;}).join('')+'</tbody></table></div>';
+}
+
+// ── TRANSFER ──────────────────────────────────────────────────
+async function handleTransfer(){
+  if(!CU)return;
+  const recipId=document.getElementById('trRecip').value.trim().toUpperCase();
+  const currency=document.getElementById('trCur').value;
+  const amount=parseFloat(document.getElementById('trAmt').value);
+  const pass=document.getElementById('trPass').value;
+  clrAlert('transferAlert');
+  if(!recipId||isNaN(amount)||amount<=0||!pass){setAlert('transferAlert',t('err_fields'));return;}
+  if(pass!==CU.password){setAlert('transferAlert',t('err_pass'));return;}
+  if(recipId===CU.account_id){setAlert('transferAlert',t('err_self'));return;}
+  showLoad();
+  try{
+    const{data:recip}=await sb.from('users').select('*').eq('account_id',recipId).maybeSingle();
+    if(!recip){setAlert('transferAlert',t('err_notfound'));hideLoad();return;}
+    const{data:sender}=await sb.from('users').select('*').eq('id',CU.id).maybeSingle();
+    if(currency==='USD'&&sender.balance_usd<amount){setAlert('transferAlert',t('err_funds'));hideLoad();return;}
+    if(currency==='EGP'&&sender.balance_egp<amount){setAlert('transferAlert',t('err_funds'));hideLoad();return;}
+    if(currency==='USD'){
+      await sb.from('users').update({balance_usd:+(sender.balance_usd-amount).toFixed(6)}).eq('id',sender.id);
+      await sb.from('users').update({balance_usd:+(recip.balance_usd+amount).toFixed(6)}).eq('id',recip.id);
+    }else{
+      await sb.from('users').update({balance_egp:+(sender.balance_egp-amount).toFixed(2)}).eq('id',sender.id);
+      await sb.from('users').update({balance_egp:+(recip.balance_egp+amount).toFixed(2)}).eq('id',recip.id);
+    }
+    await sb.from('transactions').insert({id:uid(),from_account_id:sender.account_id,to_account_id:recip.account_id,from_username:sender.username,to_username:recip.username,amount,currency,type:'transfer',timestamp:now(),status:'completed'});
+    document.getElementById('trRecip').value='';document.getElementById('trAmt').value='';document.getElementById('trPass').value='';
+    setAlert('transferAlert',t('ok_transfer'),'success');toast(t('ok_transfer'));loadDash();
+  }catch(e){setAlert('transferAlert','❌ '+e.message);}
+  hideLoad();
+}
+
+// ── EXCHANGE ──────────────────────────────────────────────────
+async function updatePreview(){
+  await fetchRate();
+  const dir=document.getElementById('exDir').value;
+  const amt=parseFloat(document.getElementById('exAmt').value)||0;
+  const el=document.getElementById('exPreview');
+  if(amt<=0){el.textContent='—';return;}
+  el.textContent=dir==='usd-to-egp'?`${fmtM(amt,'USD')} → ${fmtM(+(amt*RATE).toFixed(2),'EGP')}`:`${fmtM(amt,'EGP')} → ${fmtM(+(amt/RATE).toFixed(6),'USD')}`;
+}
+async function handleExchange(){
+  if(!CU)return;await fetchRate();
+  const dir=document.getElementById('exDir').value;
+  const amount=parseFloat(document.getElementById('exAmt').value);
+  clrAlert('exchangeAlert');
+  if(isNaN(amount)||amount<=0){setAlert('exchangeAlert',t('err_amount'));return;}
+  showLoad();
+  try{
+    const{data:u}=await sb.from('users').select('*').eq('id',CU.id).maybeSingle();
+    if(dir==='usd-to-egp'&&u.balance_usd<amount){setAlert('exchangeAlert',t('err_funds'));hideLoad();return;}
+    if(dir==='egp-to-usd'&&u.balance_egp<amount){setAlert('exchangeAlert',t('err_funds'));hideLoad();return;}
+    const upd=dir==='usd-to-egp'?{balance_usd:+(u.balance_usd-amount).toFixed(6),balance_egp:+(u.balance_egp+amount*RATE).toFixed(2)}:{balance_egp:+(u.balance_egp-amount).toFixed(2),balance_usd:+(u.balance_usd+amount/RATE).toFixed(6)};
+    await sb.from('users').update(upd).eq('id',u.id);
+    await sb.from('transactions').insert({id:uid(),from_account_id:u.account_id,to_account_id:u.account_id,from_username:u.username,to_username:u.username,amount,currency:dir==='usd-to-egp'?'USD→EGP':'EGP→USD',type:'exchange',timestamp:now(),status:'completed'});
+    CU={...u,...upd};document.getElementById('exAmt').value='';updatePreview();
+    setAlert('exchangeAlert',t('ok_exchange'),'success');toast(t('ok_exchange'));loadDash();
+  }catch(e){setAlert('exchangeAlert','❌ '+e.message);}
+  hideLoad();
+}
+
+// ── HISTORY ───────────────────────────────────────────────────
+async function loadHistory(){
+  if(!CU)return;
+  const{data:txs}=await sb.from('transactions').select('*').or(`from_account_id.eq.${CU.account_id},to_account_id.eq.${CU.account_id}`).order('timestamp',{ascending:false});
+  const tb=document.getElementById('histBody');
+  if(!txs?.length){tb.innerHTML=`<tr><td colspan="6" class="empty">${t('no_transactions')}</td></tr>`;return;}
+  tb.innerHTML=txs.map(tx=>{const out=tx.from_account_id===CU.account_id&&tx.type==='transfer';const exc=tx.type==='exchange';return`<tr><td>${fmtD(tx.timestamp)}</td><td>${exc?t('exchange_type'):out?t('outgoing'):t('incoming')}</td><td>${tx.from_account_id}</td><td>${tx.to_account_id}</td><td class="${out?'amt-out':exc?'':'amt-in'}">${fmtM(tx.amount,exc?'USD':tx.currency)}</td><td><span class="badge b-green">${t('completed')}</span></td></tr>`;}).join('');
+}
+
+// ── DEPOSITS ──────────────────────────────────────────────────
+async function loadDeposits(){
+  if(!CU)return;
+  const{data:deps}=await sb.from('deposits').select('*').eq('user_id',CU.id).order('created_at',{ascending:false});
+  const tb=document.getElementById('depBody');
+  if(!deps?.length){tb.innerHTML=`<tr><td colspan="5" class="empty">—</td></tr>`;return;}
+  tb.innerHTML=deps.map(d=>`<tr><td>${fmtD(d.created_at)}</td><td>${fmtM(d.amount,d.currency)}</td><td>${d.currency}</td><td>${d.method||'—'}</td><td>${d.status==='approved'?`<span class="badge b-green">${t('approved')}</span>`:d.status==='rejected'?`<span class="badge b-red">${t('rejected')}</span>`:`<span class="badge b-gold">${t('pending')}</span>`}</td></tr>`).join('');
+}
+async function handleDeposit(){
+  if(!CU)return;
+  const currency=document.getElementById('depCur').value;
+  const amount=parseFloat(document.getElementById('depAmt').value);
+  const method=document.getElementById('depMethod').value.trim();
+  clrAlert('depositAlert');
+  if(isNaN(amount)||amount<1){setAlert('depositAlert',t('err_amount'));return;}
+  showLoad();
+  try{
+    await sb.from('deposits').insert({id:uid(),user_id:CU.id,account_id:CU.account_id,username:CU.username,amount,currency,method:method||null,status:'pending',created_at:now()});
+    document.getElementById('depAmt').value='';document.getElementById('depMethod').value='';
+    setAlert('depositAlert',t('ok_deposit'),'success');toast(t('ok_deposit'));loadDeposits();
+  }catch(e){setAlert('depositAlert','❌ '+e.message);}
+  hideLoad();
+}
+
+// ── TICKETS ───────────────────────────────────────────────────
+async function loadTickets(){
+  if(!CU)return;
+  const{data:tks}=await sb.from('tickets').select('*').eq('user_id',CU.id).order('created_at',{ascending:false});
+  const c=document.getElementById('tkList');
+  if(!tks?.length){c.innerHTML=`<div class="empty">${t('no_tickets')}</div>`;return;}
+  c.innerHTML=tks.map(tk=>`<div class="tk-card" onclick="openTkModal('${tk.id}')"><div style="display:flex;align-items:center;justify-content:space-between"><strong>${tk.subject}</strong>${tk.status==='open'?`<span class="badge b-blue">${t('open')}</span>`:`<span class="badge b-red">${t('closed')}</span>`}</div><div style="font-size:.78rem;color:var(--text3);margin-top:4px">${fmtD(tk.created_at)}</div></div>`).join('');
+}
+async function handleCreateTicket(){
+  if(!CU)return;
+  const subject=document.getElementById('tkSubject').value.trim();
+  const msg=document.getElementById('tkMsg').value.trim();
+  clrAlert('ticketAlert');
+  if(!subject||!msg){setAlert('ticketAlert',t('err_fields'));return;}
+  showLoad();
+  try{
+    await sb.from('tickets').insert({id:uid(),user_id:CU.id,account_id:CU.account_id,username:CU.username,subject,messages:[{from:'user',fromName:CU.username,text:msg,timestamp:now()}],status:'open',created_at:now()});
+    document.getElementById('tkSubject').value='';document.getElementById('tkMsg').value='';
+    setAlert('ticketAlert',t('ok_ticket'),'success');toast(t('ok_ticket'));loadTickets();
+  }catch(e){setAlert('ticketAlert','❌ '+e.message);}
+  hideLoad();
+}
+async function openTkModal(id){
+  TK_ID=id;
+  const{data:tk}=await sb.from('tickets').select('*').eq('id',id).maybeSingle();
+  if(!tk)return;
+  document.getElementById('tkModalSubject').textContent=tk.subject;
+  const msgs=tk.messages||[];
+  const ca=document.getElementById('tkChat');
+  ca.innerHTML=msgs.length?msgs.map(m=>`<div class="bubble ${m.from==='admin'?'admin':'user'}"><strong>${m.from==='admin'?'🛡 Admin':m.fromName}</strong>${m.text}<small>${fmtD(m.timestamp)}</small></div>`).join(''):`<div class="empty">—</div>`;
+  ca.scrollTop=ca.scrollHeight;
+  document.getElementById('tkCloseBtn').style.display=(CU?.is_admin&&tk.status==='open')?'inline-flex':'none';
+  document.getElementById('tkModal').classList.add('open');
+}
+function closeTkModal(){document.getElementById('tkModal').classList.remove('open');document.getElementById('tkReply').value='';TK_ID=null;}
+async function handleTkReply(){
+  if(!TK_ID||!CU)return;
+  const reply=document.getElementById('tkReply').value.trim();if(!reply)return;
+  showLoad();
+  try{
+    const{data:tk}=await sb.from('tickets').select('*').eq('id',TK_ID).maybeSingle();
+    if(!tk||tk.status==='closed'){toast(LANG==='ar'?'التذكرة مغلقة':'Ticket is closed','error');hideLoad();return;}
+    const messages=[...(tk.messages||[]),{from:CU.is_admin?'admin':'user',fromName:CU.username,text:reply,timestamp:now()}];
+    await sb.from('tickets').update({messages}).eq('id',TK_ID);
+    document.getElementById('tkReply').value='';toast(t('ok_reply'));openTkModal(TK_ID);
+  }catch(e){toast('Error: '+e.message,'error');}
+  hideLoad();
+}
+async function handleCloseTk(){
+  if(!CU?.is_admin||!TK_ID)return;
+  if(!confirm(LANG==='ar'?'إغلاق التذكرة؟':'Close this ticket?'))return;
+  showLoad();
+  await sb.from('tickets').update({status:'closed'}).eq('id',TK_ID);
+  toast(t('ok_closed'));closeTkModal();loadTickets();loadAdmin();hideLoad();
+}
+
+// ── ADMIN ─────────────────────────────────────────────────────
+async function loadAdmin(){
+  if(!CU?.is_admin)return;
+  const[{data:users},{data:deps},{data:tks}]=await Promise.all([
+    sb.from('users').select('*'),
+    sb.from('deposits').select('*').eq('status','pending'),
+    sb.from('tickets').select('*').eq('status','open')
+  ]);
+  await fetchRate();
+  document.getElementById('adUsers').textContent=users?.length||0;
+  document.getElementById('adUSD').textContent=fmtM((users||[]).reduce((a,u)=>a+Number(u.balance_usd||0),0),'USD');
+  document.getElementById('adEGP').textContent=fmtM((users||[]).reduce((a,u)=>a+Number(u.balance_egp||0),0),'EGP');
+  document.getElementById('adRate').value=RATE;
+  document.getElementById('adDepBody').innerHTML=!deps?.length?`<tr><td colspan="5" class="empty">—</td></tr>`:deps.map(d=>`<tr><td>${fmtD(d.created_at)}</td><td>${d.username}<br><small style="color:var(--text3)">${d.account_id}</small></td><td><strong>${fmtM(d.amount,d.currency)}</strong></td><td>${d.currency}</td><td style="display:flex;gap:6px"><button class="btn btn-green btn-sm" onclick="approveDeposit('${d.id}')">${t('approve')}</button><button class="btn btn-danger btn-sm" onclick="rejectDeposit('${d.id}')">${t('reject')}</button></td></tr>`).join('');
+  document.getElementById('adUsersBody').innerHTML=(users||[]).map(u=>`<tr><td><code style="font-size:.78rem">${u.account_id}</code></td><td>${u.username}${u.is_admin?' 👑':''}</td><td>${fmtM(u.balance_usd,'USD')}</td><td>${fmtM(u.balance_egp,'EGP')}</td></tr>`).join('');
+  const tc=document.getElementById('adTkList');
+  tc.innerHTML=!tks?.length?`<div class="empty">${t('no_tickets')}</div>`:tks.map(tk=>`<div class="tk-card" onclick="openTkModal('${tk.id}')"><div style="display:flex;align-items:center;justify-content:space-between"><strong>🎫 ${tk.subject}</strong><span class="badge b-blue">${tk.username}</span></div><div style="font-size:.78rem;color:var(--text3);margin-top:4px">${fmtD(tk.created_at)}</div></div>`).join('');
+}
+async function approveDeposit(id){
+  showLoad();
+  try{
+    const{data:d}=await sb.from('deposits').select('*').eq('id',id).maybeSingle();if(!d){hideLoad();return;}
+    await sb.from('deposits').update({status:'approved',approved_at:now(),approved_by:CU.username}).eq('id',id);
+    const{data:u}=await sb.from('users').select('*').eq('id',d.user_id).maybeSingle();
+    if(u){
+      const upd=d.currency==='USD'?{balance_usd:+(u.balance_usd+d.amount).toFixed(6)}:{balance_egp:+(u.balance_egp+d.amount).toFixed(2)};
+      await sb.from('users').update(upd).eq('id',u.id);
+      await sb.from('transactions').insert({id:uid(),from_account_id:'SYSTEM',to_account_id:u.account_id,from_username:'System',to_username:u.username,amount:d.amount,currency:d.currency,type:'deposit',timestamp:now(),status:'completed'});
+    }
+    toast(t('ok_approved'));loadAdmin();
+  }catch(e){toast('Error: '+e.message,'error');}
+  hideLoad();
+}
+async function rejectDeposit(id){
+  if(!confirm(LANG==='ar'?'رفض هذا الطلب؟':'Reject this deposit?'))return;
+  showLoad();
+  await sb.from('deposits').update({status:'rejected',rejected_at:now(),rejected_by:CU.username}).eq('id',id);
+  toast(t('ok_rejected'),'info');loadAdmin();hideLoad();
+}
+async function handleUpdateRate(){
+  const rate=parseFloat(document.getElementById('adRate').value);
+  if(isNaN(rate)||rate<1)return;
+  showLoad();
+  await sb.from('settings').upsert({id:1,exchange_rate:rate});
+  RATE=rate;document.getElementById('rateDisp').textContent=rate;document.getElementById('rateDispEx').textContent=rate;
+  toast(t('ok_rate'));hideLoad();
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+document.getElementById('tkModal').addEventListener('click',e=>{if(e.target===document.getElementById('tkModal'))closeTkModal();});
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  if(document.getElementById('page-login').classList.contains('active'))handleLogin();
+  if(document.getElementById('page-register').classList.contains('active'))handleRegister();
+});
+setLang('en');
+</script>
+</body>
+</html>
