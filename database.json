@@ -17,6 +17,15 @@
       "email": "jtklrnrt@gmail.com",
       "phone": "",
       "role": "customer"
+    },
+    {
+      "id": null,
+      "username": "john",
+      "password": "12345678",
+      "role": "user",
+      "name": "john",
+      "email": "rgdg@gfsfsdf.con",
+      "createdAt": "2026-05-13T01:38:07.523Z"
     }
   ],
   "products": [
@@ -65,5 +74,7 @@
       "rating": 4.4
     }
   ],
-  "orders": []
+  "orders": [],
+  "medicines": [],
+  "cart": {}
 }
