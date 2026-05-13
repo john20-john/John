@@ -7,16 +7,7 @@
       "role": "user"
     }
   ],
-  "products": [
-    {
-      "id": 1778637100374,
-      "name": "BI ALCOFAN 150MG TAB",
-      "active_ingredient": "KETOPROFN",
-      "price": 81,
-      "stock": 5,
-      "category": "مسكن"
-    }
-  ],
+  "products": [],
   "orders": [
     {
       "id": 1778637608805,
