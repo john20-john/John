@@ -32,39 +32,6 @@
       "rating": 4.8
     },
     {
-      "id": 8,
-      "name": "زنك بلاس",
-      "price": 70,
-      "description": "مكمل الزنك لتعزيز المناعة وصحة الجلد",
-      "active_ingredient": "زنك",
-      "category": "فيتامينات",
-      "stock": 55,
-      "icon": "🌿",
-      "rating": 4.6
-    },
-    {
-      "id": 9,
-      "name": "كونكور 5",
-      "price": 145,
-      "description": "علاج ضغط الدم وأمراض القلب المزمنة",
-      "active_ingredient": "بيسوبرولول",
-      "category": "أمراض مزمنة",
-      "stock": 35,
-      "icon": "❤️",
-      "rating": 4.8
-    },
-    {
-      "id": 10,
-      "name": "جلوكوفاج 500",
-      "price": 28,
-      "description": "علاج السكري من النوع الثاني",
-      "active_ingredient": "ميتفورمين",
-      "category": "أمراض مزمنة",
-      "stock": 70,
-      "icon": "🩺",
-      "rating": 4.7
-    },
-    {
       "id": 11,
       "name": "ليبيتور 20",
       "price": 180,
