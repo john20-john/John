@@ -32,28 +32,6 @@
       "rating": 4.8
     },
     {
-      "id": 15,
-      "name": "زيرتك 10",
-      "price": 55,
-      "description": "مضاد حساسية فعال 24 ساعة",
-      "active_ingredient": "سيتريزين",
-      "category": "مضادات الحساسية",
-      "stock": 45,
-      "icon": "💜",
-      "rating": 4.8
-    },
-    {
-      "id": 16,
-      "name": "بيبانثين كريم",
-      "price": 95,
-      "description": "مرطب وعلاج التهيج الجلدي والجروح البسيطة",
-      "active_ingredient": "ديكسبانثينول",
-      "category": "جلدية",
-      "stock": 40,
-      "icon": "🧴",
-      "rating": 4.9
-    },
-    {
       "id": 17,
       "name": "بيتاديرم كريم",
       "price": 75,
@@ -63,17 +41,6 @@
       "stock": 30,
       "icon": "🏥",
       "rating": 4.4
-    },
-    {
-      "id": 18,
-      "name": "أوميغا 3",
-      "price": 135,
-      "description": "زيوت السمك لصحة القلب والدماغ",
-      "active_ingredient": "أحماض أوميغا 3 الدهنية",
-      "category": "تكميلية",
-      "stock": 65,
-      "icon": "🐟",
-      "rating": 4.8
     },
     {
       "id": 19,
