@@ -32,17 +32,6 @@
       "rating": 4.8
     },
     {
-      "id": 2,
-      "name": "أدفيل 400",
-      "price": 42,
-      "description": "مضاد للالتهابات ومسكن للآلام ومضاد للحرارة",
-      "active_ingredient": "إيبوبروفين",
-      "category": "مسكنات",
-      "stock": 60,
-      "icon": "🔴",
-      "rating": 4.7
-    },
-    {
       "id": 3,
       "name": "سيتامول",
       "price": 18,
