@@ -1,0 +1,245 @@
+{
+  "users": [
+    {
+      "id": "u0",
+      "username": "admin12345",
+      "password": "admin12345",
+      "name": "المدير",
+      "email": "admin@dawai.com",
+      "phone": "01000000000",
+      "role": "admin"
+    },
+    {
+      "id": "u1778633914651",
+      "username": "john123",
+      "password": "12345678",
+      "name": "جون ناجي فؤاد",
+      "email": "jtklrnrt@gmail.com",
+      "phone": "",
+      "role": "customer"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "بنادول إكسترا",
+      "price": 35,
+      "description": "مسكن للألم وخافض للحرارة – يحتوي على باراسيتامول وكافيين لتخفيف الآلام بسرعة",
+      "active_ingredient": "باراسيتامول وكافيين",
+      "category": "مسكنات",
+      "stock": 80,
+      "icon": "💊",
+      "rating": 4.8
+    },
+    {
+      "id": 2,
+      "name": "أدفيل 400",
+      "price": 42,
+      "description": "مضاد للالتهابات ومسكن للآلام ومضاد للحرارة",
+      "active_ingredient": "إيبوبروفين",
+      "category": "مسكنات",
+      "stock": 60,
+      "icon": "🔴",
+      "rating": 4.7
+    },
+    {
+      "id": 3,
+      "name": "سيتامول",
+      "price": 18,
+      "description": "مسكن ألم وخافض حرارة اقتصادي وفعال",
+      "active_ingredient": "باراسيتامول",
+      "category": "مسكنات",
+      "stock": 120,
+      "icon": "💊",
+      "rating": 4.5
+    },
+    {
+      "id": 4,
+      "name": "نوروفين",
+      "price": 55,
+      "description": "مسكن للألم سريع المفعول مع إيبوبروفين",
+      "active_ingredient": "إيبوبروفين",
+      "category": "مسكنات",
+      "stock": 45,
+      "icon": "🟠",
+      "rating": 4.6
+    },
+    {
+      "id": 5,
+      "name": "أموكسيسيلين 500",
+      "price": 65,
+      "description": "مضاد حيوي واسع المجال لعلاج الالتهابات البكتيرية",
+      "active_ingredient": "أموكسيسيلين",
+      "category": "مضادات حيوية",
+      "stock": 40,
+      "icon": "🧬",
+      "rating": 4.4
+    },
+    {
+      "id": 6,
+      "name": "أوجمنتين 1g",
+      "price": 120,
+      "description": "مضاد حيوي مركب لعلاج الالتهابات المقاومة",
+      "active_ingredient": "أموكسيسيلين وحمض كلافولانيك",
+      "category": "مضادات حيوية",
+      "stock": 30,
+      "icon": "💉",
+      "rating": 4.7
+    },
+    {
+      "id": 7,
+      "name": "فيتامين سي 1000",
+      "price": 85,
+      "description": "فيتامين سي بجرعة عالية لتقوية المناعة",
+      "active_ingredient": "حمض الأسكوربيك",
+      "category": "فيتامينات",
+      "stock": 90,
+      "icon": "🍊",
+      "rating": 4.9
+    },
+    {
+      "id": 8,
+      "name": "زنك بلاس",
+      "price": 70,
+      "description": "مكمل الزنك لتعزيز المناعة وصحة الجلد",
+      "active_ingredient": "زنك",
+      "category": "فيتامينات",
+      "stock": 55,
+      "icon": "🌿",
+      "rating": 4.6
+    },
+    {
+      "id": 9,
+      "name": "كونكور 5",
+      "price": 145,
+      "description": "علاج ضغط الدم وأمراض القلب المزمنة",
+      "active_ingredient": "بيسوبرولول",
+      "category": "أمراض مزمنة",
+      "stock": 35,
+      "icon": "❤️",
+      "rating": 4.8
+    },
+    {
+      "id": 10,
+      "name": "جلوكوفاج 500",
+      "price": 28,
+      "description": "علاج السكري من النوع الثاني",
+      "active_ingredient": "ميتفورمين",
+      "category": "أمراض مزمنة",
+      "stock": 70,
+      "icon": "🩺",
+      "rating": 4.7
+    },
+    {
+      "id": 11,
+      "name": "ليبيتور 20",
+      "price": 180,
+      "description": "خافض للكوليسترول والدهون الثلاثية",
+      "active_ingredient": "أتورفاستاتين",
+      "category": "أمراض مزمنة",
+      "stock": 40,
+      "icon": "💙",
+      "rating": 4.6
+    },
+    {
+      "id": 12,
+      "name": "أوميبرازول 20",
+      "price": 32,
+      "description": "مضاد لحموضة المعدة وحماية جدار المعدة",
+      "active_ingredient": "أوميبرازول",
+      "category": "هضمية",
+      "stock": 85,
+      "icon": "🫁",
+      "rating": 4.5
+    },
+    {
+      "id": 13,
+      "name": "لوبيراميد",
+      "price": 22,
+      "description": "علاج الإسهال الحاد والمزمن",
+      "active_ingredient": "لوبيراميد هيدروكلوريد",
+      "category": "هضمية",
+      "stock": 60,
+      "icon": "🟢",
+      "rating": 4.3
+    },
+    {
+      "id": 14,
+      "name": "كلاريتين 10",
+      "price": 48,
+      "description": "مضاد حساسية غير منوم لعلاج حمى القش والشرى",
+      "active_ingredient": "لوراتادين",
+      "category": "مضادات الحساسية",
+      "stock": 50,
+      "icon": "🌸",
+      "rating": 4.7
+    },
+    {
+      "id": 15,
+      "name": "زيرتك 10",
+      "price": 55,
+      "description": "مضاد حساسية فعال 24 ساعة",
+      "active_ingredient": "سيتريزين",
+      "category": "مضادات الحساسية",
+      "stock": 45,
+      "icon": "💜",
+      "rating": 4.8
+    },
+    {
+      "id": 16,
+      "name": "بيبانثين كريم",
+      "price": 95,
+      "description": "مرطب وعلاج التهيج الجلدي والجروح البسيطة",
+      "active_ingredient": "ديكسبانثينول",
+      "category": "جلدية",
+      "stock": 40,
+      "icon": "🧴",
+      "rating": 4.9
+    },
+    {
+      "id": 17,
+      "name": "بيتاديرم كريم",
+      "price": 75,
+      "description": "كريم علاج التهابات الجلد والأكزيما",
+      "active_ingredient": "بيتاميثازون",
+      "category": "جلدية",
+      "stock": 30,
+      "icon": "🏥",
+      "rating": 4.4
+    },
+    {
+      "id": 18,
+      "name": "أوميغا 3",
+      "price": 135,
+      "description": "زيوت السمك لصحة القلب والدماغ",
+      "active_ingredient": "أحماض أوميغا 3 الدهنية",
+      "category": "تكميلية",
+      "stock": 65,
+      "icon": "🐟",
+      "rating": 4.8
+    },
+    {
+      "id": 19,
+      "name": "باراسيتامول بريستول",
+      "price": 14,
+      "description": "باراسيتامول بتركيز 500 مج بسعر اقتصادي",
+      "active_ingredient": "باراسيتامول",
+      "category": "مسكنات",
+      "stock": 200,
+      "icon": "⚪",
+      "rating": 4.3
+    },
+    {
+      "id": 20,
+      "name": "برونتال",
+      "price": 22,
+      "description": "مضاد الحساسية للأطفال والبالغين",
+      "active_ingredient": "لوراتادين",
+      "category": "مضادات الحساسية",
+      "stock": 55,
+      "icon": "🌷",
+      "rating": 4.4
+    }
+  ],
+  "orders": []
+}
