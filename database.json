@@ -32,28 +32,6 @@
       "rating": 4.8
     },
     {
-      "id": 3,
-      "name": "سيتامول",
-      "price": 18,
-      "description": "مسكن ألم وخافض حرارة اقتصادي وفعال",
-      "active_ingredient": "باراسيتامول",
-      "category": "مسكنات",
-      "stock": 120,
-      "icon": "💊",
-      "rating": 4.5
-    },
-    {
-      "id": 4,
-      "name": "نوروفين",
-      "price": 55,
-      "description": "مسكن للألم سريع المفعول مع إيبوبروفين",
-      "active_ingredient": "إيبوبروفين",
-      "category": "مسكنات",
-      "stock": 45,
-      "icon": "🟠",
-      "rating": 4.6
-    },
-    {
       "id": 5,
       "name": "أموكسيسيلين 500",
       "price": 65,
