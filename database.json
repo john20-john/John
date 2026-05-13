@@ -32,50 +32,6 @@
       "rating": 4.8
     },
     {
-      "id": 11,
-      "name": "ليبيتور 20",
-      "price": 180,
-      "description": "خافض للكوليسترول والدهون الثلاثية",
-      "active_ingredient": "أتورفاستاتين",
-      "category": "أمراض مزمنة",
-      "stock": 40,
-      "icon": "💙",
-      "rating": 4.6
-    },
-    {
-      "id": 12,
-      "name": "أوميبرازول 20",
-      "price": 32,
-      "description": "مضاد لحموضة المعدة وحماية جدار المعدة",
-      "active_ingredient": "أوميبرازول",
-      "category": "هضمية",
-      "stock": 85,
-      "icon": "🫁",
-      "rating": 4.5
-    },
-    {
-      "id": 13,
-      "name": "لوبيراميد",
-      "price": 22,
-      "description": "علاج الإسهال الحاد والمزمن",
-      "active_ingredient": "لوبيراميد هيدروكلوريد",
-      "category": "هضمية",
-      "stock": 60,
-      "icon": "🟢",
-      "rating": 4.3
-    },
-    {
-      "id": 14,
-      "name": "كلاريتين 10",
-      "price": 48,
-      "description": "مضاد حساسية غير منوم لعلاج حمى القش والشرى",
-      "active_ingredient": "لوراتادين",
-      "category": "مضادات الحساسية",
-      "stock": 50,
-      "icon": "🌸",
-      "rating": 4.7
-    },
-    {
       "id": 15,
       "name": "زيرتك 10",
       "price": 55,
