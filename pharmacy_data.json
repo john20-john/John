@@ -17,5 +17,23 @@
       "category": "مسكن"
     }
   ],
-  "orders": []
+  "orders": [
+    {
+      "id": 1778637501381,
+      "user": "john",
+      "items": [
+        {
+          "id": 1778637100374,
+          "name": "BI ALCOFAN 150MG TAB",
+          "active_ingredient": "KETOPROFN",
+          "price": 81,
+          "stock": 5,
+          "category": "مسكن",
+          "qty": 6
+        }
+      ],
+      "status": "جديد",
+      "total": 486
+    }
+  ]
 }
