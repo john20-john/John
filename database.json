@@ -75,6 +75,20 @@
     }
   ],
   "orders": [],
-  "medicines": [],
+  "medicines": [
+    {
+      "id": 1,
+      "name": "bi alcofan",
+      "description": "11",
+      "activeIngredient": "bi",
+      "priceEGP": 16,
+      "category": "tab",
+      "form": "tab",
+      "manufacturer": "",
+      "image": "https://accounts.google.com/SignOutOptions?hl=en&continue=https://gemini.google.com/&ec=GBRAkgU",
+      "stock": 0,
+      "alternatives": []
+    }
+  ],
   "cart": {}
 }
