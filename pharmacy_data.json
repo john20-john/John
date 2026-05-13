@@ -1,5 +1,12 @@
 {
-  "users": [],
+  "users": [
+    {
+      "name": "John nagy fouad",
+      "username": "john",
+      "password": "12345678",
+      "role": "user"
+    }
+  ],
   "products": [
     {
       "id": 1778637100374,
