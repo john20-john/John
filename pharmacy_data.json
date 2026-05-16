@@ -4,7 +4,8 @@
       "name": "John nagy fouad",
       "username": "john",
       "password": "12345678",
-      "role": "user"
+      "role": "user",
+      "isBanned": true
     },
     {
       "name": "john",
