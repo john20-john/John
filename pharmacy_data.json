@@ -39,6 +39,19 @@
       "imageUrl": "",
       "desc": "hhhh",
       "isActive": true
+    },
+    {
+      "id": 1778904941162,
+      "name": "بانادول",
+      "nameEn": "panadol",
+      "active": "paracetamol",
+      "category": "مسكنات",
+      "price": "92.00",
+      "discountPercent": 36,
+      "priceAfterDiscount": 58.88,
+      "imageUrl": "https://ibb.co/TBYLKQF3",
+      "desc": "",
+      "isActive": true
     }
   ],
   "orders": [
