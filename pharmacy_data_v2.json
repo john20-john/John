@@ -1,0 +1,18 @@
+{
+  "users": [],
+  "products": [
+    {
+      "id": 1778900808137,
+      "name": "panadol",
+      "active": "paracetamol",
+      "price": 90,
+      "discountPercent": 29,
+      "category": "مسكن",
+      "desc": "",
+      "imageUrl": "https://ibb.co/TBYLKQF3",
+      "isVisible": true
+    }
+  ],
+  "orders": [],
+  "chats": []
+}
