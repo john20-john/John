@@ -30,12 +30,12 @@
     },
     {
       "id": 1778902343905,
-      "name": "hhhh",
+      "name": "hhhh.",
       "active": "hhh",
       "category": "hhhh",
       "price": "150.00",
       "discountPercent": 0,
-      "priceAfterDiscount": "150.00",
+      "priceAfterDiscount": 150,
       "imageUrl": "",
       "desc": "hhhh",
       "isActive": false
