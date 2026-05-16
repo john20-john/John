@@ -12,7 +12,16 @@
       "available": true
     }
   ],
-  "users": [],
+  "users": [
+    {
+      "id": 1778900040850,
+      "name": "john",
+      "username": "johnnagy",
+      "pass": "12345678",
+      "role": "user",
+      "banned": false
+    }
+  ],
   "orders": [],
   "categories": [
     "مسكنات",
