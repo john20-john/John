@@ -12,7 +12,7 @@
       "username": "john1",
       "password": "12345678",
       "role": "user",
-      "isBanned": true
+      "isBanned": false
     }
   ],
   "products": [
