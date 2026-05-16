@@ -69,7 +69,15 @@
       "total": 486
     }
   ],
-  "messages": [],
+  "messages": [
+    {
+      "id": 1778901833694,
+      "from": "john1",
+      "to": "admin",
+      "text": "مرحبا",
+      "timestamp": 1778901833694
+    }
+  ],
   "categories": [
     "مسكنات",
     "مضادات حيوية",
