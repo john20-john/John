@@ -434,6 +434,13 @@
       "to": "john1",
       "text": "..",
       "timestamp": 1778904017002
+    },
+    {
+      "id": 1778904081517,
+      "from": "admin",
+      "to": "john1",
+      "text": ".",
+      "timestamp": 1778904081517
     }
   ],
   "categories": [
