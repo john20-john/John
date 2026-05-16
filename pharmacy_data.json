@@ -5,6 +5,13 @@
       "username": "john",
       "password": "12345678",
       "role": "user"
+    },
+    {
+      "name": "john",
+      "username": "john1",
+      "password": "12345678",
+      "role": "user",
+      "isBanned": false
     }
   ],
   "products": [],
