@@ -56,6 +56,29 @@
   ],
   "orders": [
     {
+      "id": 1778905029130,
+      "user": "john1",
+      "items": [
+        {
+          "id": 1778904941162,
+          "name": "بانادول",
+          "nameEn": "panadol",
+          "active": "paracetamol",
+          "category": "مسكنات",
+          "price": "92.00",
+          "discountPercent": 36,
+          "priceAfterDiscount": 58.88,
+          "imageUrl": "https://ibb.co/TBYLKQF3",
+          "desc": "",
+          "isActive": true,
+          "qty": 6
+        }
+      ],
+      "total": "353.28",
+      "date": "5/16/2026, 7:17:09 AM",
+      "status": "قيد المراجعة"
+    },
+    {
       "id": 1778902467074,
       "user": "john1",
       "items": [
