@@ -14,7 +14,20 @@
       "isBanned": true
     }
   ],
-  "products": [],
+  "products": [
+    {
+      "id": 1778901932930,
+      "name": "panadol",
+      "active": "paracetamol",
+      "category": "مسكنات",
+      "price": "92.00",
+      "discountPercent": 29,
+      "priceAfterDiscount": 65.32,
+      "imageUrl": "https://ibb.co/TBYLKQF3",
+      "desc": "",
+      "isActive": true
+    }
+  ],
   "orders": [
     {
       "id": 1778891020834,
