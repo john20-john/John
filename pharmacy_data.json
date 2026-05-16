@@ -5,7 +5,7 @@
       "username": "john",
       "password": "12345678",
       "role": "user",
-      "isBanned": true
+      "isBanned": false
     },
     {
       "name": "john",
